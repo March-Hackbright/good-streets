@@ -115,30 +115,28 @@ def get_police_departments():
     data = {"categories": "policedepartments",
             "latitude": 37.7749,
             "longitude": -122.4194,
+            "limit": 50,
             }
 
     response = requests.get(endpoint, params=data, headers=get_header())
-    print response
 
     business = response.json()
-    print business
-    print "++++++++++++++++++++++++++++++++++++++++++++"
 
 
     for b in business['businesses']:
         police_departments = b['id']
         yelp_information(police_departments)
-        print"****************************************"
-        print police_departments
+
 
 def get_self_defense():
     """Get self-defense studios in the area"""
 
     endpoint = API_ROOT + "businesses/search"
 
-    data = {"categories": "selfdefense",
+    data = {"categories": "martialarts",
             "latitude": 37.7749,
             "longitude": -122.4194,
+            "limit": 50,
             }
 
     response = requests.get(endpoint, params=data, headers=get_header())
@@ -163,6 +161,7 @@ if __name__ == "__main__":
     # from server import app
     # connect_to_db(app)
     obtain_bearer_token()
-    get_police_departments()
+    # get_police_departments()
+    get_self_defense()
     # yelp_information(business_id)
     # get_yelp_reviews(business_id)
