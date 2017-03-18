@@ -1,16 +1,13 @@
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+{% block body %}
     <h1> Hello </h1>
     x
     <div class="col-xs-3" id="map" style="width: 60%; height: 400px; "></div>
 
-
-</body>
-
 <script src="https://maps.googleapis.com/maps/api/js?key={{google_maps_key}}&callback=initMap"
 async defer></script>
 <script type="text/javascript" src="/static/map.js"></script>
-</html>
+{% endblock %}
