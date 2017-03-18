@@ -115,17 +115,21 @@ def get_business_ids():
 
     endpoint = API_ROOT + "businesses/search"
 
-    data = {"name": "fight and fitness",
-            "term": "Martial Arts",
+    data = {"categories": "martialarts,ethnicgrocery,embassy",
             "latitude": 37.7749,
             "longitude": -122.4194,
+            "limit": 3,
             }
 
+
+
     response = requests.get(endpoint, params=data, headers=get_header())
+    print response
 
     business = response.json()
+    print business
 
-
+################################################################################
 if __name__ == "__main__":
 
     # from server import app
