@@ -28,11 +28,11 @@ def crimes_in_box():
     """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
     Returns all crimes in that bounding box."""
 
-    max_lat = float(request.args.get('NE-lat', 38))
-    max_lng = float(request.args.get('NE-lng', -122))
+    max_lat = float(request.form.get('NE-lat', 38))
+    max_lng = float(request.form.get('NE-lng', -122))
 
-    min_lat = float(request.args.get('SW-lat', 37))
-    min_lng = float(request.args.get('SW-lng', -123))
+    min_lat = float(request.form.get('SW-lat', 37))
+    min_lng = float(request.form.get('SW-lng', -123))
 
     print min_lat, min_lng, max_lat, max_lng
 
@@ -56,11 +56,33 @@ def crimes_in_box():
     return jsonify(list_to_send)
 
 
-@app.route("/green-markers.json")
+@app.route("/green-markers.json", methods=["POST"])
 def show_resources():
-    """Get resources from Amanda's Yelp file."""
-    depts = yelp.get_police_departments()
-    self_defense = yelp.get_self_defense()
+    """Get resources from Amanda's Yelp file.  Query this with latitude and longitude bounding boxes."""
+
+    min_lat = request.form.get('SW-lat')
+    max_lat = request.form.get('NE-lat')
+    min_lng = request.form.get('SW-lng')
+    max_lng = request.form.get('NE-lng')
+
+    if min_lat and max_lat and min_lng and max_lng:
+        min_lat = float(min_lat)
+        max_lat = float(max_lat)
+        min_lng = float(min_lng)
+        max_long = float(max_lng)
+
+        kilometers_lat = 55.5*(max_lat - min_lat)
+        kilometers_lng = 44.5*(max_lng - min_lng)
+        radius = max(kilometers_lng+kilometers_lat, 100)
+        center_lng = (max_lng + min_lng)/2
+        center_lat = (max_lat + min_lat)/2
+
+        depts = yelp.get_police_departments(center_lat, center_lng, radius)
+        self_defense = yelp.get_self_defense(center_lat, center_lng, radius)
+
+    else:
+        depts = yelp.get_police_departments()
+        self_defense = yelp.get_self_defense()
     
     return jsonify(depts + self_defense)
 
