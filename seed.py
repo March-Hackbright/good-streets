@@ -48,7 +48,7 @@ if __name__ == '__main__':
     from server import app
     from model import connect_to_db
 
-    connect_to_db(app, db_uri)
+    connect_to_db(app, db_uri, echo=False)
 
     db.create_all()
     load_data(file_name)

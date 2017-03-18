@@ -8,6 +8,8 @@ import datetime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
+from model import connect_to_db, db, Crime
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'mysecret'
@@ -21,13 +23,45 @@ def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
 
 
+@app.route('/markers.json')
+def crimes_in_box():
+    """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
+    Returns all crimes in that bounding box."""
+
+    max_lat = float(request.args.get('NE-lat', 38))
+    max_lng = float(request.args.get('NE-lng', -122))
+
+    min_lat = float(request.args.get('SW-lat', 37))
+    min_lng = float(request.args.get('SW-lng', -123))
+
+    print min_lat, min_lng, max_lat, max_lng
+
+    crimes = Crime.query.filter(Crime.lat >= min_lat, 
+                                Crime.lat <= max_lat,
+                                Crime.lng >= min_lng,
+                                Crime.lng <= max_lng,
+                                ).all()
+
+    list_to_send = []
+    print "Number of crimes:", len(crimes)
+
+    for crime in crimes:
+        data = {'lat': float(crime.lat),
+                'lng': float(crime.lng),
+                'category': crime.category,
+                'specific': crime.specific,
+                'datetime': crime.date.isoformat()
+                }
+        list_to_send.append(data)
+    return jsonify(list_to_send)
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
     app.debug = True
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
 
-    # connect_to_db(app)
+    connect_to_db(app)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
