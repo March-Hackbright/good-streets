@@ -16,6 +16,10 @@ app.config['SECRET_KEY'] = 'mysecret'
 google_maps_key = os.environ['GOOGLE_MAPS_ACCESS_TOKEN']
 
 
+@app.route('/test')
+def template_test():
+    return render_template("index.html")
+
 @app.route('/map')
 def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
