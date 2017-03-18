@@ -43,7 +43,7 @@ if __name__ == '__main__':
         db_uri = 'postgresql:///test_crime_data'
     else:
         file_name = 'simplified_crime_data.json'
-        db_uri = 'postgresql:///test_crime_data'
+        db_uri = 'postgresql:///crime_data'
 
     from server import app
     from model import connect_to_db
