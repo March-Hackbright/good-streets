@@ -45,17 +45,14 @@ def yelp_information(business_id):
 
     yelp_info = {}
 
-    yelp_info["image_url"] = info['image_url']
     yelp_info["rating"] = info["rating"]
 
     try:
-        yelp_info["photos"] = info["photos"]
         yelp_info["open_now"] = info['hours'][0]["is_open_now"]
         yelp_info["opens"] = info['hours'][0]["open"][0]['start']
         yelp_info["closes"] = info['hours'][0]["open"][0]['end']
 
     except KeyError:
-        yelp_info["photos"] = ''
         yelp_info["open_now"] = ''
         yelp_info["opens"] = ''
         yelp_info["closes"] = ''
@@ -125,14 +122,39 @@ def get_police_departments():
 
     business = response.json()
     print business
+    print "++++++++++++++++++++++++++++++++++++++++++++"
 
-    i = 0
 
-    for b in business:
-        police_departments = business['businesses'][i]['id']
-        i += 1
+    for b in business['businesses']:
+        police_departments = b['id']
+        yelp_information(police_departments)
         print"****************************************"
         print police_departments
+
+def get_self_defense():
+    """Get self-defense studios in the area"""
+
+    endpoint = API_ROOT + "businesses/search"
+
+    data = {"categories": "selfdefense",
+            "latitude": 37.7749,
+            "longitude": -122.4194,
+            }
+
+    response = requests.get(endpoint, params=data, headers=get_header())
+    print response
+
+    business = response.json()
+    print business
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+
+
+    for b in business['businesses']:
+        self_defense = b['id']
+        yelp_information(self_defense)
+        print"****************************************"
+        print self_defense
+
 
 
 ################################################################################
@@ -142,5 +164,5 @@ if __name__ == "__main__":
     # connect_to_db(app)
     obtain_bearer_token()
     get_police_departments()
-    yelp_information(business_id)
-    get_yelp_reviews(business_id)
+    # yelp_information(business_id)
+    # get_yelp_reviews(business_id)
