@@ -110,18 +110,15 @@ def get_yelp_reviews(business_id):
     return yelp_reviews
 
 
-def get_business_ids():
+def get_police_departments():
     """Get the business id for each business"""
 
     endpoint = API_ROOT + "businesses/search"
 
-    data = {"categories": "martialarts,ethnicgrocery,embassy",
+    data = {"categories": "policedepartments",
             "latitude": 37.7749,
             "longitude": -122.4194,
-            "limit": 3,
             }
-
-
 
     response = requests.get(endpoint, params=data, headers=get_header())
     print response
@@ -129,12 +126,21 @@ def get_business_ids():
     business = response.json()
     print business
 
+    i = 0
+
+    for b in business:
+        police_departments = business['businesses'][i]['id']
+        i += 1
+        print"****************************************"
+        print police_departments
+
+
 ################################################################################
 if __name__ == "__main__":
 
     # from server import app
     # connect_to_db(app)
     obtain_bearer_token()
-    get_business_ids()
+    get_police_departments()
     yelp_information(business_id)
     get_yelp_reviews(business_id)
