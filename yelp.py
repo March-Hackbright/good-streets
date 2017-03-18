@@ -107,7 +107,7 @@ def get_yelp_reviews(business_id):
     return yelp_reviews
 
 
-def get_police_departments():
+def get_police_departments(center_lat=37.7749, center_lng=-122.4194, radius=100):
     """Get the business id for each business"""
 
     endpoint = API_ROOT + "businesses/search"
@@ -141,7 +141,7 @@ def get_police_departments():
     return result_list
 
 
-def get_self_defense(center_lat=37.7749, center_lng=-122.4194):
+def get_self_defense(center_lat=37.7749, center_lng=-122.4194, radius=100):
     """Get self-defense studios in the area"""
 
     endpoint = API_ROOT + "businesses/search"
@@ -149,7 +149,7 @@ def get_self_defense(center_lat=37.7749, center_lng=-122.4194):
     data = {"categories": "martialarts",
             "latitude": center_lat,
             "longitude": center_lng,
-            "radius": 100
+            "radius": 100,
             "limit": 10,
             }
 
@@ -174,6 +174,71 @@ def get_self_defense(center_lat=37.7749, center_lng=-122.4194):
     return results
 
 
+def get_bars(center_lat=37.7749, center_lng=-122.4194, radius=100):
+    """Get bars in the area"""
+
+    endpoint = API_ROOT + "businesses/search"
+
+    data = {"categories": "bars",
+            "latitude": center_lat,
+            "longitude": center_lng,
+            "radius": 100,
+            "limit": 10,
+            }
+
+    response = requests.get(endpoint, params=data, headers=get_header())
+
+    business = response.json()
+
+    results = []
+
+    for b in business['businesses']:
+        bars = b['id']
+        lat = b['coordinates']['latitude']
+        lng = b['coordinates']['longitude']
+
+        data = yelp_information(bars)
+
+        data['lat'] = lat
+        data['lng'] = lng
+        data['category'] = "bar"
+        results.append(data)
+
+    return results
+
+
+def get_restaurants(center_lat=37.7749, center_lng=-122.4194, radius=100):
+    """Get restaurants in the area"""
+
+    endpoint = API_ROOT + "businesses/search"
+
+    data = {"categories": "restaurants",
+            "latitude": center_lat,
+            "longitude": center_lng,
+            "radius": 100,
+            "limit": 10,
+            }
+
+    response = requests.get(endpoint, params=data, headers=get_header())
+
+    business = response.json()
+
+    results = []
+
+    for b in business['businesses']:
+        bars = b['id']
+        lat = b['coordinates']['latitude']
+        lng = b['coordinates']['longitude']
+
+        data = yelp_information(bars)
+
+        data['lat'] = lat
+        data['lng'] = lng
+        data['category'] = "restaurants"
+        results.append(data)
+
+    return results
+
 ################################################################################
 if __name__ == "__main__":
 
@@ -182,5 +247,7 @@ if __name__ == "__main__":
     obtain_bearer_token()
     get_police_departments()
     # get_self_defense()
+    get_bars()
+    get_restaurants()
     # yelp_information(business_id)
     # get_yelp_reviews(business_id)
