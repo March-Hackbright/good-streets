@@ -1,2 +1,8 @@
 secrets.sh
+<<<<<<< HEAD
 env
+=======
+*.pyc
+env*
+scrap/
+>>>>>>> 4cf67dd4e18dc16f4cb01372d212fec6505a4ba5
