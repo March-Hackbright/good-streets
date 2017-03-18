@@ -3,6 +3,8 @@ import json
 from datetime import datetime
 from decimal import Decimal
 
+from model import Crime, db, connect_to_db
+
 def read_json_file(file_name='simplified_crime_data.json'):
     """Read JSON file for use in creating tables."""
 
@@ -26,7 +28,7 @@ def load_data(file_name):
     for item in all_data:
         crime = Crime(category=item['category'],
             specific=item['specification'],
-            date = convert_date(item['date'], item['time'])
+            date = convert_date(item['date'], item['time']),
             location = item['location'],
             lat = Decimal(item['latitude']),
             lng = Decimal(item['longitude'])
@@ -48,4 +50,5 @@ if __name__ == '__main__':
 
     connect_to_db(app, db_uri)
 
+    db.create_all()
     load_data(file_name)

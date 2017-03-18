@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import date
 
 db = SQLAlchemy()
 
@@ -11,7 +11,7 @@ class Crime(db.Model):
 
     crime_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lat = db.Column(db.Numeric(20, 15))
-    lng = db.Column(db.String(20, 15))
+    lng = db.Column(db.Numeric(20, 15))
     category = db.Column(db.String(128))
     specific = db.Column(db.String(256))
     date = db.Column(db.DateTime)
