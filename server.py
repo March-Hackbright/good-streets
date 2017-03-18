@@ -55,6 +55,16 @@ def crimes_in_box():
         list_to_send.append(data)
     return jsonify(list_to_send)
 
+
+@app.route("/green-markers.json")
+def show_resources():
+    """Get resources from Amanda's Yelp file."""
+    depts = yelp.get_police_departments()
+    self_defense = yelp.get_self_defense()
+    
+    return jsonify(depts + self_defense)
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
@@ -62,6 +72,7 @@ if __name__ == "__main__":
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
 
     connect_to_db(app)
+    import yelp
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
