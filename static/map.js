@@ -51,9 +51,11 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     codeAddress('end');
     console.log(endpoints);
 
-    var dataInput = {'endpoints': JSON.strigify(endpoints)};
-
-    // $.post('/');
+    var dataInput = {'first': endpoints[0],
+                     'second': endpoints[1]};
+    console.log(dataInput);
+    // post data to route, returns data with show markers
+    // $.post('/markers.json', dataInput, showMarkers);
 }
 
 function codeAddress(loc) {
@@ -69,7 +71,7 @@ function codeAddress(loc) {
         var lat = results[0].geometry.location.lat();
         var lng = results[0].geometry.location.lng();
         var my_latlon = {'lat': lat, 'lng': lng};
-        endpoints.push(my_latlon);
+        endpoints.push(JSON.stringify(my_latlon));
 
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
@@ -77,30 +79,30 @@ function codeAddress(loc) {
     });
   }
 
-// function showMarkers(data) {
-//     if (data) {
-//     for (var key in data) {
-//       (function () {
-//         var myLatLng = {lat: data[key].lat, lng: data[key].lng};
-//         var marker = new google.maps.Marker({
-//           position: myLatLng,
-//           map: map,
-//           dragable: true});
-//         map.panTo(myLatLng);
-//         marker.id = uniqueId;
-//         marker.description = data[key].description;
-//         uniqueId ++;
-//         markers.push(marker);
-//             });
-//         }
-//     }
-// }
+function showMarkers(data) {
+    if (data) {
+        for (var geo in data) {
+          (function () {
+            var myLatLng = {lat: geo.lat, lng: geo.lng};
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              dragable: true});
+            map.panTo(myLatLng);
+            // marker.id = uniqueId;
+            // marker.description = data[key].description;
+            // uniqueId ++;
+            markers.push(marker);
+                });
+            }
+    }
+}
 
 
-// //Sets the map on all markers in the array.
-// function setMapOnAll(map) {
-//   for (var i = 0; i < markers.length; i++) {
-//     console.log(markers[i]);
-//     markers[i].setMap(map);
-//   }
-// }
+//Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i = 0; i < markers.length; i++) {
+    console.log(markers[i]);
+    markers[i].setMap(map);
+  }
+}
