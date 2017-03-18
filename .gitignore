@@ -1,4 +1,4 @@
 secrets.sh
-env
 *.pyc
+env*
 scrap/
