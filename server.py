@@ -23,10 +23,13 @@ def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
 
 
-@app.route('/markers.json')
+@app.route('/markers.json', methods=["POST"])
 def crimes_in_box():
     """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
     Returns all crimes in that bounding box."""
+
+    my_first_data = request.form.get('first')
+    my_second_data = request.form.get('second')
 
     max_lat = float(request.form.get('NE-lat', 38))
     max_lng = float(request.form.get('NE-lng', -122))
