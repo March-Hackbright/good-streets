@@ -18,50 +18,21 @@ app.config['SECRET_KEY'] = 'mysecret'
 google_maps_key = os.environ['GOOGLE_MAPS_ACCESS_TOKEN']
 
 
-@app.route('/test')
-def template_test():
-    return render_template("index.html")
-
 @app.route('/map')
 def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
 
 
-def process_form(my_first_data, my_second_data):
-
-    if my_first_data:
-        first = json.loads(my_first_data)
-    else:
-        first = {'lat': 37, 'lng': -123}
-    if my_second_data:
-        second = json.loads(my_second_data)
-        print type(second)
-        print second
-    else:
-        second = {'lat': 38, 'lng': -122}
-
-    max_lat = max(first['lat'], second['lat'])
-    min_lat = min(first['lat'], second['lat'])
-
-    max_lng = max(first['lng'], second['lng'])
-    min_lng = min(first['lng'], second['lng'])
-    return {'min_lng': min_lng, 'max_lng': max_lng, 'min_lat': min_lat, 'max_lat': max_lat}
-
-
-@app.route('/markers.json', methods=["POST"])
+@app.route('/markers.json')
 def crimes_in_box():
     """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
     Returns all crimes in that bounding box."""
 
-    my_first_data = request.form.get('first')
-    my_second_data = request.form.get('second')
+    max_lat = float(request.form.get('NE-lat', 38))
+    max_lng = float(request.form.get('NE-lng', -122))
 
-    bounds = process_form(my_first_data, my_second_data)
-
-    min_lat = bounds['min_lat']
-    max_lat = bounds['max_lat']
-    min_lng = bounds['min_lng']
-    max_lng = bounds['max_lng']
+    min_lat = float(request.form.get('SW-lat', 37))
+    min_lng = float(request.form.get('SW-lng', -123))
 
     print min_lat, min_lng, max_lat, max_lng
 
@@ -69,12 +40,8 @@ def crimes_in_box():
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
                                 Crime.lng <= max_lng,
-<<<<<<< HEAD
-                                ).order_by(date).limit(100).all()
+                                ).all()
     print crimes
-=======
-                                ).order_by(Crime.date.desc()).limit(100).all()
->>>>>>> 1db35676134696a3aa423678129037c5e532ddb3
 
     list_to_send = []
     print "Number of crimes:", len(crimes)
@@ -87,43 +54,32 @@ def crimes_in_box():
                 'datetime': crime.date.isoformat()
                 }
         list_to_send.append(data)
-    write_log("Result list", str(list_to_send)[:200])
-    return json.dumps(list_to_send)
-
-def write_log(*args):
-    with open("server.log", 'a') as log_file:
-        log_file.write('\n'.join(args))
+    return jsonify(list_to_send)
 
 
 @app.route("/green-markers.json", methods=["POST"])
 def show_resources():
     """Get resources from Amanda's Yelp file.  Query this with latitude and longitude bounding boxes."""
 
-    my_first_data = request.form.get('first')
-    my_second_data = request.form.get('second')
+    min_lat = request.form.get('SW-lat')
+    max_lat = request.form.get('NE-lat')
+    min_lng = request.form.get('SW-lng')
+    max_lng = request.form.get('NE-lng')
 
-    if my_second_data and my_first_data:
-        bounds = process_form(my_first_data, my_second_data)
-
-        min_lat = bounds['min_lat']
-        max_lat = bounds['max_lat']
-        min_lng = bounds['min_lng']
-        max_lng = bounds['max_lng']
+    if min_lat and max_lat and min_lng and max_lng:
+        min_lat = float(min_lat)
+        max_lat = float(max_lat)
+        min_lng = float(min_lng)
+        max_long = float(max_lng)
 
         kilometers_lat = 55.5*(max_lat - min_lat)
         kilometers_lng = 44.5*(max_lng - min_lng)
-        radius = max(1000*kilometers_lng+1000*kilometers_lat, 100)
+        radius = max(kilometers_lng+kilometers_lat, 100)
         center_lng = (max_lng + min_lng)/2
         center_lat = (max_lat + min_lat)/2
 
         depts = yelp.get_police_departments(center_lat, center_lng, radius)
         self_defense = yelp.get_self_defense(center_lat, center_lng, radius)
-        write_log("Police departments", str(depts))
-        write_log("Self defense", str(self_defense))
-
-        depts = [x for x in depts if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
-        self_defense = [x for x in self_defense if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
-
 
     else:
         depts = yelp.get_police_departments()
