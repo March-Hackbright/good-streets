@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>{% block title %}Walk San Francisco{% endblock %} - Good Streets</title>
+        <meta name="generator" content="GoodStreets" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <link href="/static/css/styles.css" rel="stylesheet">
+    </head>
+    <body>
+<!-- Wrap all page content here -->
+<div id="wrap">
+
+<!-- Fixed navbar -->
+<div class="navbar navbar-custom navbar-inverse navbar-static-top" id="nav">
+    <div class="container">
+    <a href="#" class="navbar-left"><img src="/static/img/"></a>
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav nav-justified">
+          <li><a href="#section1">Home</a></li>
+          <li><a href="http://facebook.com/hackbrightacademy"><i class="fa fa-facebook fa-2x" aria-hidden="true"></i></a></li>
+          <li><a href="http://twitter.com/hackbrightacademy"><i class="fa fa-twitter fa-2x" aria-hidden="true"></i></a></li>
+
+          <li><a href="http://google.com/+hackbrightacademy"><i class="fa fa-google-plus fa-2x" aria-hidden="true"></i></a></li>
+          <li><a href="http://pinterest.com/in1"><i class="fa fa-pinterest-p fa-2x" aria-hidden="true"></i></a></li>
+          <li><a href="http://lyft.com"><img src="/static/img/logo_tiny_silver.png"></a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container -->
+</div><!--/.navbar -->
+  
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+
+    {% for category, message in messages %}
+
+      <div class="alert alert-{{ category }}">
+          {{ message }}.
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="content">
+{% block content %}
+   <!-- put your content here -->
+{% endblock %}  
+
+</div><!--/wrap-->
+
+<div id="footer">
+  <div class="container">
+    <p class="text-muted">Copyright &copy; GoodStreets. All rights reserved.</p>
+  </div>
+</div>
+
+<ul class="nav pull-right scroll-top">
+  <li><a href="#" title="Scroll to top"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+        <!-- script references -->
+      <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu5nZKbeK-WHQ70oqOWo-_4VmwOwKP9YQ"></script>
+    </body>
+</html>

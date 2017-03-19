@@ -31,7 +31,6 @@ function initMap() {
     calculateAndDisplayRoute(directionsService, directionsDisplay);
   });
   
-  // $.get('/add_marker.json/'+tripCode, showMarkers);
 }
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
@@ -46,14 +45,11 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         window.alert('Directions request failed due to ' + status);
       }
     });
-    // console.log(document.getElementById('start').value);
+    
     codeAddress('start');
     codeAddress('end');
-    console.log(endpoints);
+    // console.log(endpoints);
 
-    var dataInput = {'endpoints': JSON.strigify(endpoints)};
-
-    // $.post('/');
 }
 
 function codeAddress(loc) {
@@ -70,37 +66,48 @@ function codeAddress(loc) {
         var lng = results[0].geometry.location.lng();
         var my_latlon = {'lat': lat, 'lng': lng};
         endpoints.push(my_latlon);
-
+        pushEndpoints();
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
   }
 
-// function showMarkers(data) {
-//     if (data) {
-//     for (var key in data) {
-//       (function () {
-//         var myLatLng = {lat: data[key].lat, lng: data[key].lng};
-//         var marker = new google.maps.Marker({
-//           position: myLatLng,
-//           map: map,
-//           dragable: true});
-//         map.panTo(myLatLng);
-//         marker.id = uniqueId;
-//         marker.description = data[key].description;
-//         uniqueId ++;
-//         markers.push(marker);
-//             });
-//         }
-//     }
-// }
+function pushEndpoints() {
+    if(endpoints.length===2) {
+    console.log(endpoints);
+    var dataInput = {'first': JSON.stringify(endpoints[0]),
+                     'second': JSON.stringify(endpoints[1])};
+    console.log(dataInput);
+    // post data to route, returns data with show markers
+    $.post('/markers.json', dataInput, showMarkers);
+}
+}
+
+function showMarkers(data) {
+
+    if (data) {
+        data = JSON.parse(data);
+        // console.log(data);
+        for (var geo in data) {
+            console.log(data[geo].lat);
+            var myLatLng = {lat: data[geo].lat, lng: data[geo].lng};
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              dragable: true});
+        
+            markers.push(marker);
+                }
+            }
+    }
 
 
-// //Sets the map on all markers in the array.
-// function setMapOnAll(map) {
-//   for (var i = 0; i < markers.length; i++) {
-//     console.log(markers[i]);
-//     markers[i].setMap(map);
-//   }
-// }
+
+//Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i = 0; i < markers.length; i++) {
+    console.log(markers[i]);
+    markers[i].setMap(map);
+  }
+}
