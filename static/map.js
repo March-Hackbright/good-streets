@@ -28,6 +28,11 @@ function initMap() {
   });
   directionsDisplay.setMap(map);
   document.getElementById('submit').addEventListener('click', function() {
+
+    endpoints = [];
+    markers = [];
+    console.log(markers);
+    setMapOnAll(null);
     calculateAndDisplayRoute(directionsService, directionsDisplay);
   });
   
@@ -45,10 +50,9 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         window.alert('Directions request failed due to ' + status);
       }
     });
-    
+    console.log(endpoints);
     codeAddress('start');
     codeAddress('end');
-    // console.log(endpoints);
 
 }
 
@@ -81,8 +85,8 @@ function pushEndpoints() {
     console.log(dataInput);
     // post data to route, returns data with show markers
     $.post('/markers.json', dataInput, showMarkers);
-    $.get('green-markers.json', showgreenMarkers);
-}
+    $.post('/green-markers.json', dataInput, showgreenMarkers);
+    }
 }
 
 function showMarkers(data) {
@@ -91,7 +95,7 @@ function showMarkers(data) {
         data = JSON.parse(data);
         // console.log(data);
         for (var geo in data) {
-            console.log(data[geo].lat);
+
             var myLatLng = {lat: data[geo].lat, lng: data[geo].lng};
             var marker = new google.maps.Marker({
               position: myLatLng,
