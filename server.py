@@ -108,7 +108,7 @@ def show_resources():
 
         kilometers_lat = 55.5*(max_lat - min_lat)
         kilometers_lng = 44.5*(max_lng - min_lng)
-        radius = max(1000*kilometers_lng+1000*kilometers_lat), 100)
+        radius = max(1000*kilometers_lng+1000*kilometers_lat, 100)
         center_lng = (max_lng + min_lng)/2
         center_lat = (max_lat + min_lat)/2
 
