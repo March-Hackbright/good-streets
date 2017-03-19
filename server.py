@@ -65,7 +65,7 @@ def crimes_in_box():
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
                                 Crime.lng <= max_lng,
-                                )order_by(Crime.date.desc()).limit(100).all()
+                                ).order_by(Crime.date.desc()).limit(100).all()
 
     list_to_send = []
     print "Number of crimes:", len(crimes)
@@ -103,16 +103,22 @@ def show_resources():
 
         kilometers_lat = 55.5*(max_lat - min_lat)
         kilometers_lng = 44.5*(max_lng - min_lng)
-        radius = max(1000*kilometers_lng+1000*kilometers_lat, 100)
+        radius = max(1000*kilometers_lng+1000*kilometers_lat), 100)
         center_lng = (max_lng + min_lng)/2
         center_lat = (max_lat + min_lat)/2
 
         depts = yelp.get_police_departments(center_lat, center_lng, radius)
         self_defense = yelp.get_self_defense(center_lat, center_lng, radius)
 
+        depts = [x for x in depts if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
+        self_defense = [x for x in self_defense if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
+
+
     else:
         depts = yelp.get_police_departments()
         self_defense = yelp.get_self_defense()
+
+
     
     return jsonify(depts + self_defense)
 
