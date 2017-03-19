@@ -1,8 +1,8 @@
 """Yelp API calls for business ids and reviews. Cap is 25,000 calls per day."""
 
-import requests
 import os
-#from model import db, connect_to_db, Park
+import requests
+
 
 # Call limit to yelp api is 25,000/day
 
@@ -107,7 +107,7 @@ def get_yelp_reviews(business_id):
     return yelp_reviews
 
 
-def get_police_departments():
+def get_police_departments(center_lat=37.7749, center_lng=-122.4194, radius=100):
     """Get the business id for each business"""
 
     endpoint = API_ROOT + "businesses/search"
@@ -122,38 +122,122 @@ def get_police_departments():
 
     business = response.json()
 
+    result_list = []
 
     for b in business['businesses']:
         police_departments = b['id']
-        yelp_information(police_departments)
+
+        lat = b['coordinates']['latitude']
+        lng = b['coordinates']['longitude']
+        data = yelp_information(police_departments)
+
+        data['category'] = "police department"
+        data['lat'] = lat
+        data['lng'] = lng
+
+        result_list.append(data)
+
+    print result_list
+    return result_list
 
 
-def get_self_defense():
+def get_self_defense(center_lat=37.7749, center_lng=-122.4194, radius=100):
     """Get self-defense studios in the area"""
 
     endpoint = API_ROOT + "businesses/search"
 
     data = {"categories": "martialarts",
-            "latitude": 37.7749,
-            "longitude": -122.4194,
-            "limit": 50,
+            "latitude": center_lat,
+            "longitude": center_lng,
+            "radius": 100,
+            "limit": 10,
             }
 
     response = requests.get(endpoint, params=data, headers=get_header())
-    print response
 
     business = response.json()
-    print business
-    print "++++++++++++++++++++++++++++++++++++++++++++"
 
+    results = []
 
     for b in business['businesses']:
         self_defense = b['id']
-        yelp_information(self_defense)
-        print"****************************************"
-        print self_defense
+        lat = b['coordinates']['latitude']
+        lng = b['coordinates']['longitude']
+
+        data = yelp_information(self_defense)
+
+        data['lat'] = lat
+        data['lng'] = lng
+        data['category'] = "self-defense"
+        results.append(data)
+
+    return results
 
 
+def get_bars(center_lat=37.7749, center_lng=-122.4194, radius=100):
+    """Get bars in the area"""
+
+    endpoint = API_ROOT + "businesses/search"
+
+    data = {"categories": "bars",
+            "latitude": center_lat,
+            "longitude": center_lng,
+            "radius": 100,
+            "limit": 10,
+            }
+
+    response = requests.get(endpoint, params=data, headers=get_header())
+
+    business = response.json()
+
+    results = []
+
+    for b in business['businesses']:
+        bars = b['id']
+        lat = b['coordinates']['latitude']
+        lng = b['coordinates']['longitude']
+
+        data = yelp_information(bars)
+
+        data['lat'] = lat
+        data['lng'] = lng
+        data['category'] = "bar"
+        results.append(data)
+
+    return results
+
+
+def get_restaurants(center_lat=37.7749, center_lng=-122.4194, radius=100):
+    """Get restaurants in the area"""
+
+    endpoint = API_ROOT + "businesses/search"
+
+    data = {"categories": "restaurants",
+            "latitude": center_lat,
+            "longitude": center_lng,
+            "radius": 100,
+            "limit": 10,
+            }
+
+    response = requests.get(endpoint, params=data, headers=get_header())
+
+    business = response.json()
+
+    results = []
+
+    for b in business['businesses']:
+        bars = b['id']
+        lat = b['coordinates']['latitude']
+        lng = b['coordinates']['longitude']
+
+        data = yelp_information(bars)
+
+        data['lat'] = lat
+        data['lng'] = lng
+        data['category'] = "restaurants"
+        results.append(data)
+
+    return results
 
 ################################################################################
 if __name__ == "__main__":
@@ -161,7 +245,9 @@ if __name__ == "__main__":
     # from server import app
     # connect_to_db(app)
     obtain_bearer_token()
-    # get_police_departments()
-    get_self_defense()
+    get_police_departments()
+    # get_self_defense()
+    get_bars()
+    get_restaurants()
     # yelp_information(business_id)
     # get_yelp_reviews(business_id)

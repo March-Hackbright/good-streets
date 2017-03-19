@@ -82,6 +82,38 @@ def write_log(*args):
     with open("server.log", 'a') as log_file:
         log_file.write('\n'.join(args))
 
+
+@app.route("/green-markers.json", methods=["POST"])
+def show_resources():
+    """Get resources from Amanda's Yelp file.  Query this with latitude and longitude bounding boxes."""
+
+    min_lat = request.form.get('SW-lat')
+    max_lat = request.form.get('NE-lat')
+    min_lng = request.form.get('SW-lng')
+    max_lng = request.form.get('NE-lng')
+
+    if min_lat and max_lat and min_lng and max_lng:
+        min_lat = float(min_lat)
+        max_lat = float(max_lat)
+        min_lng = float(min_lng)
+        max_long = float(max_lng)
+
+        kilometers_lat = 55.5*(max_lat - min_lat)
+        kilometers_lng = 44.5*(max_lng - min_lng)
+        radius = max(kilometers_lng+kilometers_lat, 100)
+        center_lng = (max_lng + min_lng)/2
+        center_lat = (max_lat + min_lat)/2
+
+        depts = yelp.get_police_departments(center_lat, center_lng, radius)
+        self_defense = yelp.get_self_defense(center_lat, center_lng, radius)
+
+    else:
+        depts = yelp.get_police_departments()
+        self_defense = yelp.get_self_defense()
+    
+    return jsonify(depts + self_defense)
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
@@ -89,6 +121,7 @@ if __name__ == "__main__":
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
 
     connect_to_db(app)
+    import yelp
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
