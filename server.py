@@ -18,14 +18,9 @@ app.config['SECRET_KEY'] = 'mysecret'
 google_maps_key = os.environ['GOOGLE_MAPS_ACCESS_TOKEN']
 
 
-@app.route('/test')
-def template_test():
-    return render_template("index.html")
-
 @app.route('/map')
 def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
-
 
 def process_form(my_first_data, my_second_data):
 
@@ -65,12 +60,10 @@ def crimes_in_box():
 
     print min_lat, min_lng, max_lat, max_lng
 
-    crimes = Crime.query.filter(Crime.lat >= min_lat,
+    crimes = Crime.query.filter(Crime.lat >= min_lat, 
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
-                                Crime.lng <= max_lng,
-
-                                ).order_by(Crime.date.desc()).limit(100).all()
+                                Crime.lng <= max_lng).order_by(Crime.date.desc()).limit(100).all()
 
     list_to_send = []
     print "Number of crimes:", len(crimes)
@@ -83,8 +76,9 @@ def crimes_in_box():
                 'datetime': crime.date.isoformat()
                 }
         list_to_send.append(data)
-    write_log("Result list", str(list_to_send)[:200])
+    write_log("Result list", str(list_to_send))
     return json.dumps(list_to_send)
+
 
 def write_log(*args):
     with open("server.log", 'a') as log_file:
@@ -114,8 +108,6 @@ def show_resources():
 
         depts = yelp.get_police_departments(center_lat, center_lng, radius)
         self_defense = yelp.get_self_defense(center_lat, center_lng, radius)
-        write_log("Police departments", str(depts))
-        write_log("Self defense", str(self_defense))
 
         depts = [x for x in depts if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
         self_defense = [x for x in self_defense if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
