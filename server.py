@@ -112,11 +112,13 @@ def show_resources():
         write_log("Police departments", str(depts))
         write_log("Self defense", str(self_defense))
 
+        depts = [x for x in depts if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
+        self_defense = [x for x in self_defense if x['lat'] >= min_lat and x['lng'] >= min_lng and x['lat'] <= max_lat and x['lng'] <= max_lng]
+
+
     else:
         depts = yelp.get_police_departments()
         self_defense = yelp.get_self_defense()
-
-    print depts + self_defense
     
     return jsonify(depts + self_defense)
 
