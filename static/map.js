@@ -31,7 +31,6 @@ function initMap() {
     calculateAndDisplayRoute(directionsService, directionsDisplay);
   });
   
-  // $.get('/add_marker.json/'+tripCode, showMarkers);
 }
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
@@ -46,16 +45,11 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         window.alert('Directions request failed due to ' + status);
       }
     });
-    // console.log(document.getElementById('start').value);
+    
     codeAddress('start');
     codeAddress('end');
-    console.log(endpoints);
+    // console.log(endpoints);
 
-    var dataInput = {'first': endpoints[0],
-                     'second': endpoints[1]};
-    console.log(dataInput);
-    // post data to route, returns data with show markers
-    // $.post('/markers.json', dataInput, showMarkers);
 }
 
 function codeAddress(loc) {
@@ -71,32 +65,43 @@ function codeAddress(loc) {
         var lat = results[0].geometry.location.lat();
         var lng = results[0].geometry.location.lng();
         var my_latlon = {'lat': lat, 'lng': lng};
-        endpoints.push(JSON.stringify(my_latlon));
-
+        endpoints.push(my_latlon);
+        pushEndpoints();
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
   }
 
+function pushEndpoints() {
+    if(endpoints.length===2) {
+    console.log(endpoints);
+    var dataInput = {'first': JSON.stringify(endpoints[0]),
+                     'second': JSON.stringify(endpoints[1])};
+    console.log(dataInput);
+    // post data to route, returns data with show markers
+    $.post('/markers.json', dataInput, showMarkers);
+}
+}
+
 function showMarkers(data) {
+
     if (data) {
+        data = JSON.parse(data);
+        // console.log(data);
         for (var geo in data) {
-          (function () {
-            var myLatLng = {lat: geo.lat, lng: geo.lng};
+            console.log(data[geo].lat);
+            var myLatLng = {lat: data[geo].lat, lng: data[geo].lng};
             var marker = new google.maps.Marker({
               position: myLatLng,
               map: map,
               dragable: true});
-            map.panTo(myLatLng);
-            // marker.id = uniqueId;
-            // marker.description = data[key].description;
-            // uniqueId ++;
+        
             markers.push(marker);
-                });
+                }
             }
     }
-}
+
 
 
 //Sets the map on all markers in the array.

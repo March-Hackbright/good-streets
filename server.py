@@ -23,16 +23,38 @@ def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
 
 
-@app.route('/markers.json')
+@app.route('/markers.json', methods=["POST"])
 def crimes_in_box():
     """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
     Returns all crimes in that bounding box."""
 
-    max_lat = float(request.args.get('NE-lat', 38))
-    max_lng = float(request.args.get('NE-lng', -122))
+    my_first_data = request.form.get('first')
+    if my_first_data:
+        first = json.loads(my_first_data)
+    else:
+        first = {'lat': 37, 'lng': -123}
+    my_second_data = request.form.get('second')
+    if my_second_data:
+        second = json.loads(my_second_data)
+        print type(second)
+        print second
+    else:
+        second = {'lat': 38, 'lng': -122}
 
-    min_lat = float(request.args.get('SW-lat', 37))
-    min_lng = float(request.args.get('SW-lng', -123))
+
+    max_lat = max(first['lat'], second['lat'])
+    min_lat = min(first['lat'], second['lat'])
+
+    max_lng = max(first['lng'], second['lng'])
+    min_lng = min(first['lng'], second['lng'])
+
+    # print my_first_data
+
+    # max_lat = float(request.args.get('NE-lat', 38))
+    # max_lng = float(request.args.get('NE-lng', -122))
+
+    # min_lat = float(request.args.get('SW-lat', 37))
+    # min_lng = float(request.args.get('SW-lng', -123))
 
     print min_lat, min_lng, max_lat, max_lng
 
@@ -53,7 +75,12 @@ def crimes_in_box():
                 'datetime': crime.date.isoformat()
                 }
         list_to_send.append(data)
-    return jsonify(list_to_send)
+    write_log("Result list", str(list_to_send))
+    return json.dumps(list_to_send)
+
+def write_log(*args):
+    with open("server.log", 'a') as log_file:
+        log_file.write('\n'.join(args))
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
