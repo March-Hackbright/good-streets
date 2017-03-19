@@ -97,7 +97,7 @@ function pushEndpoints() {
 
 function showMarkers(data) {
     var image = {
-          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          url: '/static/img/danger.gif',
           // This marker is 20 pixels wide by 32 pixels high.
           size: new google.maps.Size(20, 32),
           // The origin for this image is (0, 0).
@@ -128,7 +128,7 @@ function showgreenMarkers(data) {
     var marker;
 
           var policeMarker = {
-          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          url: '/static/img/police.gif',
           // This marker is 20 pixels wide by 32 pixels high.
           size: new google.maps.Size(20, 32),
           // The origin for this image is (0, 0).
@@ -138,7 +138,7 @@ function showgreenMarkers(data) {
         };
 
         var greenMarker = {
-          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          url: '/static/img/safe.png',
           // This marker is 20 pixels wide by 32 pixels high.
           size: new google.maps.Size(20, 32),
           // The origin for this image is (0, 0).
