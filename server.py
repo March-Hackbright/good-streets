@@ -63,8 +63,7 @@ def crimes_in_box():
     crimes = Crime.query.filter(Crime.lat >= min_lat, 
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
-                                Crime.lng <= max_lng,
-                                ).order_by(Crime.date.desc()).limit(100).all()
+                                Crime.lng <= max_lng).order_by(Crime.date.desc()).limit(100).all()
 
     list_to_send = []
     print "Number of crimes:", len(crimes)
@@ -79,6 +78,7 @@ def crimes_in_box():
         list_to_send.append(data)
     write_log("Result list", str(list_to_send))
     return json.dumps(list_to_send)
+
 
 def write_log(*args):
     with open("server.log", 'a') as log_file:
