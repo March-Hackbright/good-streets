@@ -30,13 +30,19 @@ function initMap() {
   document.getElementById('submit').addEventListener('click', function() {
 
     endpoints = [];
+    clearMarkers();
     markers = [];
-    console.log(markers);
-    setMapOnAll(null);
     calculateAndDisplayRoute(directionsService, directionsDisplay);
   });
   
 }
+
+function clearMarkers() {
+        for (var i = 0; i < markers.length; i++ ){
+            markers[i].setMap(null);
+        }
+      }
+
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
@@ -90,6 +96,15 @@ function pushEndpoints() {
 }
 
 function showMarkers(data) {
+    var image = {
+          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          // This marker is 20 pixels wide by 32 pixels high.
+          size: new google.maps.Size(20, 32),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the flagpole at (0, 32).
+          anchor: new google.maps.Point(0, 32)
+        };
 
     if (data) {
         data = JSON.parse(data);
@@ -100,6 +115,7 @@ function showMarkers(data) {
             var marker = new google.maps.Marker({
               position: myLatLng,
               map: map,
+              icon: image,
               dragable: true});
         
             markers.push(marker);
@@ -109,17 +125,50 @@ function showMarkers(data) {
 
 
 function showgreenMarkers(data) {
+    var marker;
+
+          var policeMarker = {
+          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          // This marker is 20 pixels wide by 32 pixels high.
+          size: new google.maps.Size(20, 32),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the flagpole at (0, 32).
+          anchor: new google.maps.Point(0, 32)
+        };
+
+        var greenMarker = {
+          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          // This marker is 20 pixels wide by 32 pixels high.
+          size: new google.maps.Size(20, 32),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the flagpole at (0, 32).
+          anchor: new google.maps.Point(0, 32)
+        };
 
     if (data) {
-        data = JSON.parse(data);
+        // data = JSON.parse(data);
         // console.log(data);
         for (var geo in data) {
             console.log(data[geo].lat);
             var myLatLng = {lat: data[geo].lat, lng: data[geo].lng};
-            var marker = new google.maps.Marker({
+            var description = data[geo].category;
+            if (description === 'police department') {
+                marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                icon: policeMarker,
+                dragable: true});
+        
+
+            } else {
+              marker = new google.maps.Marker({
               position: myLatLng,
               map: map,
+              icon: greenMarker,
               dragable: true});
+            }
         
             markers.push(marker);
                 }

@@ -65,7 +65,7 @@ def crimes_in_box():
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
                                 Crime.lng <= max_lng,
-                                )order_by(Crime.date.desc()).limit(100).all()
+                                ).order_by(Crime.date.desc()).limit(100).all()
 
     list_to_send = []
     print "Number of crimes:", len(crimes)
@@ -78,7 +78,7 @@ def crimes_in_box():
                 'datetime': crime.date.isoformat()
                 }
         list_to_send.append(data)
-    write_log("Result list", str(list_to_send))
+    write_log("Result list", str(list_to_send)[:200])
     return json.dumps(list_to_send)
 
 def write_log(*args):
@@ -109,10 +109,14 @@ def show_resources():
 
         depts = yelp.get_police_departments(center_lat, center_lng, radius)
         self_defense = yelp.get_self_defense(center_lat, center_lng, radius)
+        write_log("Police departments", str(depts))
+        write_log("Self defense", str(self_defense))
 
     else:
         depts = yelp.get_police_departments()
         self_defense = yelp.get_self_defense()
+
+    print depts + self_defense
     
     return jsonify(depts + self_defense)
 
