@@ -36,11 +36,12 @@ def crimes_in_box():
 
     print min_lat, min_lng, max_lat, max_lng
 
-    crimes = Crime.query.filter(Crime.lat >= min_lat, 
+    crimes = Crime.query.filter(Crime.lat >= min_lat,
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
                                 Crime.lng <= max_lng,
-                                ).all()
+                                ).order_by(date).limit(100).all()
+    print crimes
 
     list_to_send = []
     print "Number of crimes:", len(crimes)

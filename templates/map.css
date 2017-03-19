@@ -1,12 +1,4 @@
-<html>
-<head>
-
-    <link rel="stylesheet"
-          href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.css"/>
-    <link rel="stylesheet" href="/static/ajax-exercise.css">
-
-    <style>
-    [
+[
     {
         "featureType": "all",
         "elementType": "labels.text.fill",
@@ -143,16 +135,3 @@
         ]
     }
 ]
-</style>
-    {% block head %}
-
-    {% endblock %}
-
-</head>
-
-<body>
-{% block body %}
-{% endblock %}
-
-</body>
-</html>
