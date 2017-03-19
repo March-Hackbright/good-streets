@@ -23,17 +23,12 @@ def display_map():
     return render_template("map.html", google_maps_key=google_maps_key)
 
 
-@app.route('/markers.json', methods=["POST"])
-def crimes_in_box():
-    """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
-    Returns all crimes in that bounding box."""
+def process_form(my_first_data, my_second_data):
 
-    my_first_data = request.form.get('first')
     if my_first_data:
         first = json.loads(my_first_data)
     else:
         first = {'lat': 37, 'lng': -123}
-    my_second_data = request.form.get('second')
     if my_second_data:
         second = json.loads(my_second_data)
         print type(second)
@@ -41,20 +36,28 @@ def crimes_in_box():
     else:
         second = {'lat': 38, 'lng': -122}
 
-
     max_lat = max(first['lat'], second['lat'])
     min_lat = min(first['lat'], second['lat'])
 
     max_lng = max(first['lng'], second['lng'])
     min_lng = min(first['lng'], second['lng'])
+    return {'min_lng': min_lng, 'max_lng': max_lng, 'min_lat': min_lat, 'max_lat': max_lat}
 
-    # print my_first_data
 
-    # max_lat = float(request.args.get('NE-lat', 38))
-    # max_lng = float(request.args.get('NE-lng', -122))
+@app.route('/markers.json', methods=["POST"])
+def crimes_in_box():
+    """Query this endpoint with parameters NE-lat, NE-lng, SW-lat, SW-lng.
+    Returns all crimes in that bounding box."""
 
-    # min_lat = float(request.args.get('SW-lat', 37))
-    # min_lng = float(request.args.get('SW-lng', -123))
+    my_first_data = request.form.get('first')
+    my_second_data = request.form.get('second')
+
+    bounds = process_form(my_first_data, my_second_data)
+
+    min_lat = bounds['min_lat']
+    max_lat = bounds['max_lat']
+    min_lng = bounds['min_lng']
+    max_lng = bounds['max_lng']
 
     print min_lat, min_lng, max_lat, max_lng
 
@@ -87,20 +90,20 @@ def write_log(*args):
 def show_resources():
     """Get resources from Amanda's Yelp file.  Query this with latitude and longitude bounding boxes."""
 
-    min_lat = request.form.get('SW-lat')
-    max_lat = request.form.get('NE-lat')
-    min_lng = request.form.get('SW-lng')
-    max_lng = request.form.get('NE-lng')
+    my_first_data = request.form.get('first')
+    my_second_data = request.form.get('second')
 
-    if min_lat and max_lat and min_lng and max_lng:
-        min_lat = float(min_lat)
-        max_lat = float(max_lat)
-        min_lng = float(min_lng)
-        max_long = float(max_lng)
+    if my_second_data and my_first_data:
+        bounds = process_form(my_first_data, my_second_data)
+
+        min_lat = bounds['min_lat']
+        max_lat = bounds['max_lat']
+        min_lng = bounds['min_lng']
+        max_lng = bounds['max_lng']
 
         kilometers_lat = 55.5*(max_lat - min_lat)
         kilometers_lng = 44.5*(max_lng - min_lng)
-        radius = max(kilometers_lng+kilometers_lat, 100)
+        radius = max(1000*kilometers_lng+1000*kilometers_lat, 100)
         center_lng = (max_lng + min_lng)/2
         center_lat = (max_lat + min_lat)/2
 
