@@ -81,6 +81,7 @@ function pushEndpoints() {
     console.log(dataInput);
     // post data to route, returns data with show markers
     $.post('/markers.json', dataInput, showMarkers);
+    $.get('green-markers.json', showgreenMarkers);
 }
 }
 
@@ -102,6 +103,24 @@ function showMarkers(data) {
             }
     }
 
+
+function showgreenMarkers(data) {
+
+    if (data) {
+        data = JSON.parse(data);
+        // console.log(data);
+        for (var geo in data) {
+            console.log(data[geo].lat);
+            var myLatLng = {lat: data[geo].lat, lng: data[geo].lng};
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              dragable: true});
+        
+            markers.push(marker);
+                }
+            }
+    }
 
 
 //Sets the map on all markers in the array.
