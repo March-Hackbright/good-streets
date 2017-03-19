@@ -80,6 +80,7 @@ def crimes_in_box():
     write_log("Result list", str(list_to_send))
     return json.dumps(list_to_send)
 
+
 def write_log(*args):
     with open("server.log", 'a') as log_file:
         log_file.write('\n'.join(args))
@@ -117,7 +118,7 @@ def show_resources():
         depts = yelp.get_police_departments()
         self_defense = yelp.get_self_defense()
     
-return jsonify(depts + self_defense)
+    return jsonify(depts + self_defense)
 
 
 if __name__ == "__main__":
