@@ -65,7 +65,7 @@ def crimes_in_box():
                                 Crime.lat <= max_lat,
                                 Crime.lng >= min_lng,
                                 Crime.lng <= max_lng,
-                                ).all()
+                                )order_by(Crime.date.desc()).limit(100).all()
 
     list_to_send = []
     print "Number of crimes:", len(crimes)
