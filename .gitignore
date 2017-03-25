@@ -2,3 +2,4 @@ secrets.sh
 env
 *.pyc
 scrap/
+.DS_Store
