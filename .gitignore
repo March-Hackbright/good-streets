@@ -3,3 +3,4 @@ env
 *.pyc
 scrap/
 .DS_Store
+backlog/
