@@ -2,7 +2,7 @@
 
 ## Overview
 
-Good Streets was create as part of [WomenHack - The All-Women Hackathon San Francisco](https://www.eventbrite.com/e/womenhack-the-all-women-hackathon-san-francisco-tickets-27670276542) held March 18, 2017 at [Pivitol Labs](https://pivotal.io/locations/san-francisco). We had 10 hours to code a solution to one of several issues facing women.
+Good Streets was create as part of [WomenHack - The All-Women Hackathon San Francisco](https://www.eventbrite.com/e/womenhack-the-all-women-hackathon-san-francisco-tickets-27670276542) held March 18, 2017 at [Pivotal Labs](https://pivotal.io/locations/san-francisco). We had 10 hours to code a solution to one of several issues facing women.
 
 ## The Team
 - [Amanda Crawford](https://github.com/agerista) - Coding
